@@ -17,8 +17,8 @@ jobs:
 
       - name: Set up Git
         run: |
-          git config --global user.name $GIT_USER
-          git config --global user.email $GIT_EMAIL
+          git config --global user.name "$GIT_USER"
+          git config --global user.email "$GIT_EMAIL"
           git remote add gitlab $GITLAB_URL
 
       - name: Install SSH key
