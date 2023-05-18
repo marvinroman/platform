@@ -20,20 +20,25 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
-      - name: Push to GitLab - Dev branch
+      - name: Install SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.GITLAB_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+          git remote add gitlab ${{ secrets.GITLAB_URL }}
+
+      - name: Push to GitLab - Development branch
         if: github.ref == 'refs/heads/dev'
         run: |
-          git remote add gitlab ${{secrets.GITLAB_URL}}
           git push gitlab HEAD:development
 
       - name: Push to GitLab - Staging branch
         if: github.ref == 'refs/heads/staging'
         run: |
-          git remote add gitlab ${{secrets.GITLAB_URL}}
           git push gitlab HEAD:staging
 
       - name: Push to GitLab - Production branch
         if: github.ref == 'refs/heads/production'
         run: |
-          git remote add gitlab ${{secrets.GITLAB_URL}}
           git push gitlab HEAD:production
