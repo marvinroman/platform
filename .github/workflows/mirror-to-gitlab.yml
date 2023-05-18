@@ -17,12 +17,12 @@ jobs:
 
       - name: Set up Git
         run: |
-          echo $GIT_USER
-          git config --global user.name "${GIT_USER}"
-          echo $GIT_EMAIL
-          git config --global user.email "${GIT_EMAIL}"
-          echo $GITLAB_URL
-          git remote add gitlab ${GITLAB_URL}
+          echo ${{ vars.GIT_USER }}
+          git config --global user.name "${{ vars.GIT_USER }}"
+          echo ${{ vars.GIT_EMAIL }}
+          git config --global user.email "${{ vars.GIT_EMAIL }}"
+          echo ${{ vars.GITLAB_URL }}
+          git remote add gitlab ${{ vars.GITLAB_URL }}
 
       - name: Install SSH key
         run: |
