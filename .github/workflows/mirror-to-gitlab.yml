@@ -1,0 +1,44 @@
+name: Mirror branches to GitLab
+
+on:
+  push:
+    branches:
+      - dev
+      - staging
+      - production
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config --global user.name $GIT_USER
+          git config --global user.email $GIT_EMAIL
+          git remote add gitlab $GITLAB_URL
+
+      - name: Install SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.GITLAB_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+
+      - name: Push to GitLab - Development branch
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          git push gitlab HEAD:development
+
+      - name: Push to GitLab - Staging branch
+        if: github.ref == 'refs/heads/staging'
+        run: |
+          git push gitlab HEAD:staging
+
+      - name: Push to GitLab - Production branch
+        if: github.ref == 'refs/heads/production'
+        run: |
+          git push gitlab HEAD:production
