@@ -1,0 +1,51 @@
+name: Mirror branches to GitLab
+
+on:
+  push:
+    branches:
+      - dev
+      - staging
+      - production
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Push to GitLab - Dev branch
+        if: github.ref == 'refs/heads/dev'
+        env:
+          GITLAB_ACCESS_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
+        run: |
+          git remote add gitlab ${{secrets.GITLAB_URL}}
+          git config credential.helper store
+          echo "url=${{secrets.GITLAB_URL}}" >> $HOME/.git-credentials
+          git push gitlab HEAD:development
+
+      - name: Push to GitLab - Staging branch
+        if: github.ref == 'refs/heads/staging'
+        env:
+          GITLAB_ACCESS_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
+        run: |
+          git remote add gitlab ${{secrets.GITLAB_URL}}
+          git config credential.helper store
+          echo "url=${{secrets.GITLAB_URL}}" >> $HOME/.git-credentials
+          git push gitlab HEAD:staging
+
+      - name: Push to GitLab - Production branch
+        if: github.ref == 'refs/heads/production'
+        env:
+          GITLAB_ACCESS_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
+        run: |
+          git remote add gitlab ${{secrets.GITLAB_URL}}
+          git config credential.helper store
+          echo "url=${{secrets.GITLAB_URL}}" >> $HOME/.git-credentials
+          git push gitlab HEAD:production
