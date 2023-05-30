@@ -31,4 +31,4 @@ jobs:
           echo "${{ secrets.GITLAB_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-          git push gitlab HEAD:development
+          git push -f gitlab HEAD:development
