@@ -9,12 +9,10 @@ on:
   pull_request:
     branches:
       - dev
-  repository:
-    paths:
-      - 'accessibility-exchange/platform/**'
 
 jobs:
   mirror:
+    if: github.repository == 'accessibility-exchange/platform'
     runs-on: ubuntu-latest
 
     steps:
