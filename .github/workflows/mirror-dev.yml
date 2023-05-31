@@ -6,9 +6,6 @@ on:
       - dev
     tags:
       - '*'
-  pull_request:
-    branches:
-      - dev
 
 jobs:
   mirror:
@@ -25,10 +22,13 @@ jobs:
           git config --global user.email "${{ vars.GIT_EMAIL }}"
           git remote add gitlab ${{ vars.GITLAB_URL }}
 
-      - name: Push to GitLab
+      - name: Setup SSH agent
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.GITLAB_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add - <<< "${{ secrets.GITLAB_SSH_KEY }}"
           ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-          git push gitlab HEAD:development
+
+      - name: Push to GitLab
+        run: git push --atomic gitlab dev:development --follow-tags
