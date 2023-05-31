@@ -9,7 +9,7 @@ on:
 
 jobs:
   mirror:
-    if: github.repository == 'accessibility-exchange/platform'
+    # if: github.repository == 'accessibility-exchange/platform'
     runs-on: ubuntu-latest
 
     steps:
