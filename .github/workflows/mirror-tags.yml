@@ -1,4 +1,4 @@
-name: Mirror branches to GitLab
+name: Mirror tags to GitLab
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   mirror:
-    # if: github.repository == 'accessibility-exchange/platform'
+    if: github.repository == 'accessibility-exchange/platform'
     runs-on: ubuntu-latest
 
     steps:
@@ -25,17 +25,7 @@ jobs:
         with:
             ssh-private-key: ${{ secrets.GITLAB_SSH_KEY }}
 
-      - name: Authorize Gitlab key
-        run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-
-      - name: Push to GitLab - Development branch
-        if: github.ref == 'refs/heads/dev'
-        run: git push --atomic gitlab dev:development --follow-tags
-
-      - name: Push to GitLab - Staging branch
-        if: github.ref == 'refs/heads/staging'
-        run: git push --atomic gitlab staging:staging --follow-tags
-
-      - name: Push to GitLab - Production branch
-        if: github.ref == 'refs/heads/production'
-        run: git push --atomic gitlab production:production --follow-tags
+      - name: Push tags to GitLab
+        run: |
+          ssh-keyscan git.kube.v1.colab.coop >> ~/.ssh/known_hosts
+          git push --atomic gitlab --tags

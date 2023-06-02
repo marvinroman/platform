@@ -29,5 +29,5 @@ jobs:
 
       - name: Push to GitLab
         run: |
-          ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-          git push -f --atomic gitlab dev:development --follow-tags
+          ssh-keyscan git.kube.v1.colab.coop >> ~/.ssh/known_hosts
+          git push --atomic gitlab dev:development
