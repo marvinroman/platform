@@ -33,5 +33,5 @@ jobs:
       - name: Push to GitLab
         run: |
           ssh-keyscan ${{ vars.GITLAB_DOMAIN }} >> ~/.ssh/known_hosts
-          git pull gitlab dev:development
+          git pull gitlab development
           git push gitlab dev:development
